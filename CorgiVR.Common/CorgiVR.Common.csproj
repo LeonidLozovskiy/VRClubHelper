@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0-eap4" />
+    <PackageReference Include="MappingGenerator" Version="2021.8.29" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0-rc.2.21480.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CorgiVR.Repository\CorgiVR.Repository.csproj" />
+    <ProjectReference Include="..\CorgiVR.Services.Contract\CorgiVR.Services.Contract.csproj" />
+    <ProjectReference Include="..\CorgiVR.Services\CorgiVR.Services.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CorgiVR.Repository.Contract\CorgiVR.Repository.Contract.csproj" />
+    <ProjectReference Include="..\CorgiVR.Services.Contract\CorgiVR.Services.Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MappingGenerator" Version="2021.8.29" />
+  </ItemGroup>
+
+</Project>
