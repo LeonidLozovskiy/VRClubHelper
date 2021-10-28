@@ -47,7 +47,7 @@ namespace CorgiVR.Services
 
         private int CalculateDiscount(ClientProjection clientProjection)
         {
-            if (( clientProjection.LastVisitDate - DateTime.Now ).Days <= 14)
+            if ((DateTime.Now - clientProjection.LastVisitDate).Days <= 14)
             {
                 return clientProjection.IsBiglion
                            ? 50

@@ -132,69 +132,90 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.2*" />
+            <ColumnDefinition Width="0.15*" />
+            <ColumnDefinition Width="0.15*" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.1*" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <DockPanel>
+        <DockPanel Grid.Column="1">
             <Button Margin="5" Content="Добавить клиента" VerticalAlignment="Top"
                     Command="{Binding CreateFlyoutViewModel.OpenFlyoutCommand}" />
         </DockPanel>
-
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-            <ScrollViewer>
-                <DataGrid SelectionUnit="FullRow" AutoGenerateColumns="False"
-                          AutoGeneratingColumn="OnAutoGeneratingColumn" HeadersVisibility="All" CanUserAddRows="False"
-                          ItemsSource="{Binding Path=FilteredClients}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Path=Id}" Header="Id" IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding Path=Name}" Header="Имя" IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding Path=Phone}" Header="Телефон" IsReadOnly="True" />
-                        <DataGridTextColumn
-                            Binding="{Binding Path=CreateDate, Converter={StaticResource DateConverter}}"
-                            Header="Первый визит" IsReadOnly="True" />
-                        <DataGridTextColumn
-                            Binding="{Binding Path=LastVisitDate, Converter={StaticResource DateConverter}}"
-                            Header="Последний визит"
-                            IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding Path=Visits}" Header="Кол-во визитов" IsReadOnly="True" />
-                        <DataGridCheckBoxColumn Binding="{Binding Path=IsBiglion}" Header="Биглион" IsReadOnly="True" />
-                        <DataGridTextColumn
-                            Binding="{Binding Path=Discount, Converter={StaticResource DiscountConverter}}"
-                            Header="Скидка" IsReadOnly="True" />
-                        <DataGridTemplateColumn Header="Заметки" Width="*" CellStyle="{StaticResource NotesStyle}">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox AcceptsReturn="True" Text="{Binding Notes}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Edit" Command="{Binding EditCommand}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Visit" Command="{Binding AddVisitCommand}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </ScrollViewer>
-        </Grid>
-        <DockPanel Grid.Column="1">
-            <Label Content="Поиск по телефону: " />
+        <DockPanel Grid.Column="2">
+            <Label Content="Поиск по телефону: " VerticalAlignment="Center" />
             <TextBox Margin="5" Text="{Binding PhoneFilter, UpdateSourceTrigger=PropertyChanged}" />
         </DockPanel>
+
+        <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,2" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid>
+                <ScrollViewer>
+                    <DataGrid SelectionUnit="FullRow" AutoGenerateColumns="False"
+                              AutoGeneratingColumn="OnAutoGeneratingColumn" HeadersVisibility="All"
+                              CanUserAddRows="False"
+                              ItemsSource="{Binding Path=FilteredClients}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=Id}" Header="Id" IsReadOnly="True" />
+                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Имя" IsReadOnly="True" />
+                            <DataGridTextColumn Binding="{Binding Path=Phone}" Header="Телефон" IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Binding="{Binding Path=CreateDate, Converter={StaticResource DateConverter}}"
+                                Header="Первый визит" IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Binding="{Binding Path=LastVisitDate, Converter={StaticResource DateConverter}}"
+                                Header="Последний визит"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn Binding="{Binding Path=Visits}" Header="Кол-во визитов"
+                                                IsReadOnly="True" />
+                            <DataGridCheckBoxColumn Binding="{Binding Path=IsBiglion}" Header="Биглион"
+                                                    IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Binding="{Binding Path=Discount, Converter={StaticResource DiscountConverter}}"
+                                Header="Скидка" IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Binding="{Binding Path=DaysFromLastVisit}"
+                                Header="Дней с последнего визита" IsReadOnly="True" />
+                            <DataGridTemplateColumn Header="Заметки" Width="*" CellStyle="{StaticResource NotesStyle}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox AcceptsReturn="True" Text="{Binding Notes}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Edit" Command="{Binding EditCommand}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Visit" Command="{Binding AddVisitCommand}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,0" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                <Label Margin="5" Content="Всего клиентов: " />
+                <Label Margin="5" Content="{Binding ClientCount}" />
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                <Label Margin="5" Content="Процент активных (были в течение 2х недель): " />
+                <Label Margin="5" Content="{Binding ActiveClientsPersent, Converter={StaticResource DiscountConverter}}" />
+            </StackPanel>
+        </Border>
+
     </Grid>
 </mah:MetroWindow>

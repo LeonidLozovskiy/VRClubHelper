@@ -18,6 +18,10 @@ namespace CorgiVR.ViewModelEntities
 
         private string phoneFilter = "";
 
+        private int clientCount;
+
+        private int activeClientsPersent;
+
         public MainWindowViewModel(ILoyalityService loyalityService)
         {
             _loyalityService = loyalityService;
@@ -45,6 +49,20 @@ namespace CorgiVR.ViewModelEntities
 
         public UpdateFlyoutViewModel UpdateFlyoutViewModel { get; set; }
 
+        public int ClientCount
+        {
+            get => clientCount;
+
+            set => Set(ref clientCount, value);
+        }
+
+        public int ActiveClientsPersent
+        {
+            get => activeClientsPersent;
+
+            set => Set(ref activeClientsPersent, value);
+        }
+
         private async Task InitClients()
         {
             clients = new ObservableCollection<ClientViewModel>(( await _loyalityService.GetClients() ).Select(x => ClientViewModel.FromServiceEntity(x, UpdateFlyoutViewModel.OpenFlyout)));
@@ -55,6 +73,9 @@ namespace CorgiVR.ViewModelEntities
         {
             filteredClients.Clear();
             FilteredClients = new ObservableCollection<ClientViewModel>(clients.Where(x => x.Phone?.Contains(PhoneFilter) ?? false));
+            ClientCount = filteredClients.Count;
+            ActiveClientsPersent = (int)((filteredClients.Count(x => x.Discount != 0) / (decimal)ClientCount) * 100);
+
         }
     }
 
