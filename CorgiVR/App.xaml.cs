@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using CorgiVR.Common;
+using CorgiVR.Repository;
+using CorgiVR.Repository.Entities;
 using CorgiVR.ViewModelEntities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +44,9 @@ namespace CorgiVR
             Configuration = builder.Build();
 
             ServiceProviderFactory.SetContainer(ServiceProvider);
-
+            
+            CustomMigrations.Migrate(ServiceProvider);
+            
             var mainWindow = ServiceProvider.GetService<MainWindow>();
             mainWindow.Show();
         }

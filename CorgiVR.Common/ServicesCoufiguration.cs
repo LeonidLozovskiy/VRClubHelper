@@ -14,6 +14,8 @@ namespace CorgiVR.Common
         {
             services.AddTransient(typeof(ILoyalityRepository), typeof(LoyalityRepository));
             services.AddTransient(typeof(ILoyalityService), typeof(LoyalityService));
+            services.AddTransient(typeof(IClientKnowledgeSourcesService), typeof(ClientKnowledgeSourcesService));
+            services.AddTransient(typeof(IClientKnowledgeSourcesRepository), typeof(ClientKnowledgeSourcesRepository));
             var dbPath = configuration["DbPath"];
             services.AddDbContextPool<EfContext>(
                                                  options => options.UseSqlite($"Data Source={dbPath}"));

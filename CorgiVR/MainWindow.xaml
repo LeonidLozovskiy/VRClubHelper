@@ -6,8 +6,10 @@
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  xmlns:viewModelEntities="clr-namespace:CorgiVR.ViewModelEntities"
                  xmlns:converters="clr-namespace:CorgiVR.Converters"
+                 xmlns:helpers="clr-namespace:CorgiVR.Helpers"
                  d:DataContext="{d:DesignInstance Type=viewModelEntities:MainWindowViewModel}"
                  mc:Ignorable="d"
+                 WindowState="Maximized"
                  Title="CorgiVR" Height="450" Width="1200" MinWidth="900">
     <Window.Resources>
         <converters:DateTimeToDateConverter x:Key="DateConverter" />
@@ -62,6 +64,55 @@
                                 Command="{Binding CreateFlyoutViewModel.AddClientCommand}" />
                         <Button Grid.Column="3" Margin="5" Content="Отмена"
                                 Command="{Binding CreateFlyoutViewModel.CancelFlyoutCommand}" />
+                    </Grid>
+                </Grid>
+            </mah:Flyout>
+
+            <mah:Flyout IsOpen="{Binding AddKnowledgeSourceFlyoutViewModel.IsKnowledgeSourceFlyoutOpen}"
+                        Header="Добавить источник информации"
+                        Position="Right" Width="600" IsModal="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <DockPanel Dock="Right">
+                        <Label Content="Имя" Width="100" />
+                        <TextBox Margin="5" Text="{Binding AddKnowledgeSourceFlyoutViewModel.Name}" />
+                    </DockPanel>
+                    <DockPanel Grid.Row="1" Dock="Right">
+                        <Label Content="Колличество" Width="100" />
+                        <TextBox Margin="5" Text="{Binding AddKnowledgeSourceFlyoutViewModel.Count}" IsReadOnly="True"
+                                 IsEnabled="False" />
+                    </DockPanel>
+                    <DockPanel Grid.Row="2">
+                        <Label Content="Дата создания" Width="100" />
+                        <TextBox Margin="5" AcceptsReturn="True"
+                                 Text="{Binding AddKnowledgeSourceFlyoutViewModel.CreateDate}" IsReadOnly="True"
+                                 IsEnabled="False" />
+                    </DockPanel>
+                    <DockPanel Grid.Row="3">
+                        <Label Content="Дата редактирования" Width="100" />
+                        <TextBox Margin="5" AcceptsReturn="True"
+                                 Text="{Binding AddKnowledgeSourceFlyoutViewModel.CreateDate}" IsReadOnly="True"
+                                 IsEnabled="False" />
+                    </DockPanel>
+                    <Grid Grid.Row="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="1" Margin="5" Content="Создать"
+                                Command="{Binding AddKnowledgeSourceFlyoutViewModel.CreateKnowledgeSourceCommand}" />
+                        <Button Grid.Column="3" Margin="5" Content="Отмена"
+                                Command="{Binding AddKnowledgeSourceFlyoutViewModel.CancelFlyoutCommand}" />
                     </Grid>
                 </Grid>
             </mah:Flyout>
@@ -132,7 +183,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.15*" />
+            <ColumnDefinition Width="0.2*" />
             <ColumnDefinition Width="0.15*" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -143,77 +194,127 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <Border Grid.RowSpan="99" BorderThickness="1,3,1,1" BorderBrush="Gainsboro">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Margin="5" Content="Добавить источник" VerticalAlignment="Top"
+                        Command="{Binding AddKnowledgeSourceFlyoutViewModel.OpenFlyoutCommand}" />
+                <ListView Grid.Row="1" ItemsSource="{Binding KnowledgeSources}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="false" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Path=Name}" VerticalAlignment="Stretch"
+                                           HorizontalAlignment="Center" Margin="5" />
+                                <Label Grid.Column="1" Content="{Binding Path=Count}" Margin="5"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <Button Grid.Column="2" Content="+" Width="20" Height="20" Command="{Binding Path=IncreaseCountCommand}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" />
+                                <Button Grid.Column="3" Content="-" Width="20" Height="20" Command="{Binding Path=DecreaseCountCommand}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
+
         <DockPanel Grid.Column="1">
             <Button Margin="5" Content="Добавить клиента" VerticalAlignment="Top"
                     Command="{Binding CreateFlyoutViewModel.OpenFlyoutCommand}" />
         </DockPanel>
         <DockPanel Grid.Column="2">
             <Label Content="Поиск по телефону: " VerticalAlignment="Center" />
-            <TextBox Margin="5" Text="{Binding PhoneFilter, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Margin="5" Text="{Binding PhoneFilter, UpdateSourceTrigger=PropertyChanged, Delay=300}"/>
         </DockPanel>
 
         <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,2" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
-            <Grid>
-                <ScrollViewer>
-                    <DataGrid SelectionUnit="FullRow" AutoGenerateColumns="False"
-                              AutoGeneratingColumn="OnAutoGeneratingColumn" HeadersVisibility="All"
-                              CanUserAddRows="False"
-                              ItemsSource="{Binding Path=FilteredClients}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Path=Id}" Header="Id" IsReadOnly="True" />
-                            <DataGridTextColumn Binding="{Binding Path=Name}" Header="Имя" IsReadOnly="True" />
-                            <DataGridTextColumn Binding="{Binding Path=Phone}" Header="Телефон" IsReadOnly="True" />
-                            <DataGridTextColumn
-                                Binding="{Binding Path=CreateDate, Converter={StaticResource DateConverter}}"
-                                Header="Первый визит" IsReadOnly="True" />
-                            <DataGridTextColumn
-                                Binding="{Binding Path=LastVisitDate, Converter={StaticResource DateConverter}}"
-                                Header="Последний визит"
-                                IsReadOnly="True" />
-                            <DataGridTextColumn Binding="{Binding Path=Visits}" Header="Кол-во визитов"
+            <DataGrid SelectionUnit="FullRow" AutoGenerateColumns="False"
+                      HeadersVisibility="All"
+                      CanUserAddRows="False"
+                          ItemsSource ="{Binding Clients, IsAsync=True}"
+                          VirtualizingPanel.ScrollUnit="Pixel"
+                          SelectionMode="Single"
+                          MaxWidth="2560"
+                          MaxHeight="1600"
+                      ScrollViewer.CanContentScroll="{Binding IsGridScroll}"
+                      >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=Id}" Header="Id" IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding Path=Name}" Header="Имя" IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding Path=Phone}" Header="Телефон" IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding Path=CreateDate}"
+                            Header="Первый визит" IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding Path=LastVisitDate}"
+                            Header="Последний визит"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding Path=Visits}" Header="Кол-во визитов"
+                                            IsReadOnly="True" />
+                        <DataGridCheckBoxColumn Binding="{Binding Path=IsBiglion}" Header="Биглион"
                                                 IsReadOnly="True" />
-                            <DataGridCheckBoxColumn Binding="{Binding Path=IsBiglion}" Header="Биглион"
-                                                    IsReadOnly="True" />
-                            <DataGridTextColumn
-                                Binding="{Binding Path=Discount, Converter={StaticResource DiscountConverter}}"
-                                Header="Скидка" IsReadOnly="True" />
-                            <DataGridTextColumn
-                                Binding="{Binding Path=DaysFromLastVisit}"
-                                Header="Дней с последнего визита" IsReadOnly="True" />
-                            <DataGridTemplateColumn Header="Заметки" Width="*" CellStyle="{StaticResource NotesStyle}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBox AcceptsReturn="True" Text="{Binding Notes}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="Edit" Command="{Binding EditCommand}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="Visit" Command="{Binding AddVisitCommand}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
-            </Grid>
+                        <DataGridTextColumn
+                            Binding="{Binding Path=Discount}"
+                            Header="Скидка" IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding Path=DaysFromLastVisit}" IsReadOnly="True" 
+                            Width="130">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Дней с последнего визита"></TextBlock>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Заметки" Width="*" CellStyle="{StaticResource NotesStyle}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox AcceptsReturn="True" Text="{Binding Notes}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Edit" Command="{Binding EditCommand}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Visit" Command="{Binding AddVisitCommand}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
         </Border>
 
-        <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,0" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3">
+        <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,0" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
                 <Label Margin="5" Content="Всего клиентов: " />
                 <Label Margin="5" Content="{Binding ClientCount}" />
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Label Margin="5" Content="Процент активных (были в течение 2х недель): " />
-                <Label Margin="5" Content="{Binding ActiveClientsPersent, Converter={StaticResource DiscountConverter}}" />
+                <Label Margin="5"
+                       Content="{Binding ActiveClientsPersent, Converter={StaticResource DiscountConverter}}" />
             </StackPanel>
         </Border>
 

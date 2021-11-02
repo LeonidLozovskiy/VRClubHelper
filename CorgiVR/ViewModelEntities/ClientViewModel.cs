@@ -56,7 +56,7 @@ namespace CorgiVR.ViewModelEntities
             this.discount = discount;
             this.notes = notes;
             _openUpdateFlyout = openUpdateFlyout;
-            this.daysFromLastVisit = ( DateTime.Now - lastVisitDate ).Days;
+            this.daysFromLastVisit = GetDaysFromLastVisit();
 
             EditCommand = new RelayCommand(x => EditCommandClick(x));
             AddVisitCommand = new RelayCommand(x => AddVisitClick(x));
@@ -136,7 +136,6 @@ namespace CorgiVR.ViewModelEntities
             set
             {
                 Set(ref daysFromLastVisit, value);
-                _ = _loyalityService.UpdateClient(ToServiceEntity());
             }
         }
 
@@ -174,6 +173,11 @@ namespace CorgiVR.ViewModelEntities
                        Notes);
         }
 
+        private int GetDaysFromLastVisit()
+        {
+            return ( DateTime.Now - this.lastVisitDate ).Days;
+        }
+        
         private void EditCommandClick(object o)
         {
             _openUpdateFlyout(this);
@@ -183,6 +187,7 @@ namespace CorgiVR.ViewModelEntities
         {
             Visits++;
             LastVisitDate = DateTime.Now;
+            DaysFromLastVisit = GetDaysFromLastVisit();
             _loyalityService.UpdateClient(ToServiceEntity());
         }
     }

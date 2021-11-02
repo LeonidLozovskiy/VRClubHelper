@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using CorgiVR.Common;
 using CorgiVR.Services.Contract;
 using CorgiVR.Services.Contract.Entities;
@@ -80,18 +82,18 @@ namespace CorgiVR.ViewModelEntities
             IsCreateFlyoutOpen = !_isCreateFlyoutOpen;
         }
 
-        private void AddClientClick(object sender)
+        private async void AddClientClick(object sender)
         {
             var serviceModel = ToServiceModel();
-            _ = SaveClient(serviceModel);
-            Clean();
             IsCreateFlyoutOpen = !_isCreateFlyoutOpen;
+            await Task.Run(() => SaveClient(serviceModel));
+            Clean();
         }
 
         private async Task SaveClient(Client serviceModel)
         {
             await _loyalityService.CreateClient(serviceModel);
-            await _reloadCliens();
+            _ = Application.Current.Dispatcher.Invoke(() => _reloadCliens());
         }
 
         private void Clean()
