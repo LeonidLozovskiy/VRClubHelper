@@ -117,19 +117,16 @@ namespace CorgiVR.ViewModelEntities
             
             clientsView = CollectionViewSource.GetDefaultView(clients);
             clientsView.Filter = o => string.IsNullOrEmpty(PhoneFilter) || ( ( o as  ClientViewModel )?.Phone ?? "" ).Contains(PhoneFilter); 
-
             
             FilterClients();
         }
 
         private void FilterClients()
         {
-            var test = Stopwatch.StartNew();
             clientsView.Refresh();
-            test.Stop();
-            Console.WriteLine(test.ElapsedMilliseconds);
-            ClientCount = clientsView.Cast<object>().Count();
-            ActiveClientsPersent = (int)((clients.Count(x => x.Discount != 0) / (decimal)ClientCount) * 100);
+            var filteredClients = clientsView.Cast<ClientViewModel>().ToArray();
+            ClientCount = filteredClients.Length;
+            ActiveClientsPersent = (int)((filteredClients.Count(x => x.Discount != 0) / (decimal)ClientCount) * 100);
         }
     }
 
