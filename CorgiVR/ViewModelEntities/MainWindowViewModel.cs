@@ -20,7 +20,7 @@ namespace CorgiVR.ViewModelEntities
 
         private bool _isUpdateFlyoutOpen;
 
-        private ClientViewModel[] clients;
+        private List<ClientViewModel> clients;
 
         private List<ClientViewModel> filteredClients = new();
 
@@ -36,7 +36,7 @@ namespace CorgiVR.ViewModelEntities
         
         private ICollectionView clientsView;
 
-        private bool isGridScroll;
+        private bool isGridScroll = true;
 
         public MainWindowViewModel(ILoyalityService loyalityService, IClientKnowledgeSourcesService knowledgeSourcesService)
         {
@@ -57,7 +57,7 @@ namespace CorgiVR.ViewModelEntities
             set => Set(ref knowledgeSources, value);
         }
 
-        public ClientViewModel[] Clients { get => clients; set => Set(ref clients, value); }
+        public List<ClientViewModel> Clients { get => clients; set => Set(ref clients, value); }
 
         public List<ClientViewModel> FilteredClients { get => filteredClients; set => Set(ref filteredClients, value); }
 
@@ -113,7 +113,7 @@ namespace CorgiVR.ViewModelEntities
         
         private async Task InitClients()
         {
-            Clients = ( await loyalityService.GetClients() ).Select(x => ClientViewModel.FromServiceEntity(x, UpdateFlyoutViewModel.OpenFlyout)).ToArray();
+            Clients = new List<ClientViewModel>(( await loyalityService.GetClients() ).Select(x => ClientViewModel.FromServiceEntity(x, UpdateFlyoutViewModel.OpenFlyout)).ToArray());
             
             clientsView = CollectionViewSource.GetDefaultView(clients);
             clientsView.Filter = o => string.IsNullOrEmpty(PhoneFilter) || ( ( o as  ClientViewModel )?.Phone ?? "" ).Contains(PhoneFilter); 
@@ -125,9 +125,7 @@ namespace CorgiVR.ViewModelEntities
         private void FilterClients()
         {
             var test = Stopwatch.StartNew();
-            isGridScroll = true;
             clientsView.Refresh();
-            isGridScroll = false;
             test.Stop();
             Console.WriteLine(test.ElapsedMilliseconds);
             ClientCount = clientsView.Cast<object>().Count();

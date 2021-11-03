@@ -205,7 +205,8 @@
                 </Grid.ColumnDefinitions>
                 <Button Margin="5" Content="Добавить источник" VerticalAlignment="Top"
                         Command="{Binding AddKnowledgeSourceFlyoutViewModel.OpenFlyoutCommand}" />
-                <ListView Grid.Row="1" ItemsSource="{Binding KnowledgeSources}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+                <ListView Grid.Row="1" ItemsSource="{Binding KnowledgeSources}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Focusable" Value="false" />
@@ -224,9 +225,11 @@
                                            HorizontalAlignment="Center" Margin="5" />
                                 <Label Grid.Column="1" Content="{Binding Path=Count}" Margin="5"
                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <Button Grid.Column="2" Content="+" Width="20" Height="20" Command="{Binding Path=IncreaseCountCommand}"
+                                <Button Grid.Column="2" Content="+" Width="20" Height="20"
+                                        Command="{Binding Path=IncreaseCountCommand}"
                                         VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" />
-                                <Button Grid.Column="3" Content="-" Width="20" Height="20" Command="{Binding Path=DecreaseCountCommand}"
+                                <Button Grid.Column="3" Content="-" Width="20" Height="20"
+                                        Command="{Binding Path=DecreaseCountCommand}"
                                         VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" />
                             </Grid>
                         </DataTemplate>
@@ -241,70 +244,171 @@
         </DockPanel>
         <DockPanel Grid.Column="2">
             <Label Content="Поиск по телефону: " VerticalAlignment="Center" />
-            <TextBox Margin="5" Text="{Binding PhoneFilter, UpdateSourceTrigger=PropertyChanged, Delay=300}"/>
+            <TextBox Margin="5" Text="{Binding PhoneFilter, UpdateSourceTrigger=PropertyChanged, Delay=300}" />
         </DockPanel>
 
         <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,2" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
-            <DataGrid SelectionUnit="FullRow" AutoGenerateColumns="False"
-                      HeadersVisibility="All"
-                      CanUserAddRows="False"
-                          ItemsSource ="{Binding Clients, IsAsync=True}"
-                          VirtualizingPanel.ScrollUnit="Pixel"
-                          SelectionMode="Single"
-                          MaxWidth="2560"
-                          MaxHeight="1600"
-                      ScrollViewer.CanContentScroll="{Binding IsGridScroll}"
-                      >
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Path=Id}" Header="Id" IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding Path=Name}" Header="Имя" IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding Path=Phone}" Header="Телефон" IsReadOnly="True" />
-                        <DataGridTextColumn
-                            Binding="{Binding Path=CreateDate}"
-                            Header="Первый визит" IsReadOnly="True" />
-                        <DataGridTextColumn
-                            Binding="{Binding Path=LastVisitDate}"
-                            Header="Последний визит"
-                            IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding Path=Visits}" Header="Кол-во визитов"
-                                            IsReadOnly="True" />
-                        <DataGridCheckBoxColumn Binding="{Binding Path=IsBiglion}" Header="Биглион"
-                                                IsReadOnly="True" />
-                        <DataGridTextColumn
-                            Binding="{Binding Path=Discount}"
-                            Header="Скидка" IsReadOnly="True" />
-                        <DataGridTextColumn
-                            Binding="{Binding Path=DaysFromLastVisit}" IsReadOnly="True" 
-                            Width="130">
-                            <DataGridTextColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Дней с последнего визита"></TextBlock>
-                                </DataTemplate>
-                            </DataGridTextColumn.HeaderTemplate>
-                        </DataGridTextColumn>
-                        <DataGridTemplateColumn Header="Заметки" Width="*" CellStyle="{StaticResource NotesStyle}">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox AcceptsReturn="True" Text="{Binding Notes}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Edit" Command="{Binding EditCommand}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Visit" Command="{Binding AddVisitCommand}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.2*" x:Name="NameColumn" />
+                            <ColumnDefinition Width="0.2*" x:Name="PhoneColumn" />
+                            <ColumnDefinition Width="0.15*" x:Name="CreateDateColumn" />
+                            <ColumnDefinition Width="0.15*" x:Name="LastVisitDateColumn" />
+                            <ColumnDefinition Width="0.12*" x:Name="IsBiglionColumn" />
+                            <ColumnDefinition Width="0.13*" x:Name="DaysFromLastVisitColumn" />
+                            <ColumnDefinition Width="0.1*" x:Name="DiscountColumn" />
+                            <ColumnDefinition Width="*" x:Name="NotesColumn" />
+                            <ColumnDefinition Width="50" x:Name="VisitButtonColumn" />
+                            <ColumnDefinition Width="50" x:Name="EditButtonColumn" />
+                            <ColumnDefinition Width="10" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock TextWrapping="Wrap" Text="Имя" VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" Margin="5" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="1" Text="Телефон" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="2" Text="Дата создания" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="3" Text="Последний визит" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="4" Text="С биглиона" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="5" Text="Дней с последнего визита" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="6" Text="Скидка" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="7" Text="Заметки" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="8" Text="" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="9" Text="" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                    </Grid>
+                </Border>
+                <ListBox Grid.Row="1" ItemsSource="{Binding Clients}" HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Focusable" Value="false" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{Binding ElementName=NameColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=PhoneColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=CreateDateColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=LastVisitDateColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=IsBiglionColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=DaysFromLastVisitColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=DiscountColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=NotesColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=VisitButtonColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=EditButtonColumn, Path=Width}" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Path=Name}" VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" Margin="5" />
+                                <TextBlock Grid.Column="1" Text="{Binding Path=Phone}" Margin="5"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding Path=CreateDate, Converter={StaticResource DateConverter}}"
+                                           Margin="5"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="3"
+                                           Text="{Binding Path=LastVisitDate, Converter={StaticResource DateConverter}}"
+                                           Margin="5"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <CheckBox Grid.Column="4" IsChecked="{Binding Path=IsBiglion}" IsEnabled="False"
+                                          Margin="5"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="5" Text="{Binding Path=DaysFromLastVisit}" Margin="5"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="6"
+                                           Text="{Binding Path=Discount, Converter={StaticResource DiscountConverter}}"
+                                           Margin="5"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBox Grid.Column="7" AcceptsReturn="True" Text="{Binding Path=Notes}" Margin="5"
+                                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                                <Button Grid.Column="8" Content="Visit"
+                                        Command="{Binding Path=AddVisitCommand}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" />
+                                <Button Grid.Column="9" Content="Edit"
+                                        Command="{Binding Path=EditCommand}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <!-- <DataGrid SelectionUnit="FullRow" AutoGenerateColumns="False" -->
+            <!--           HeadersVisibility="All" -->
+            <!--           CanUserAddRows="False" -->
+            <!--           ItemsSource="{Binding Clients, IsAsync=True}" -->
+            <!--           SelectionMode="Single" -->
+            <!--           MaxWidth="2560" -->
+            <!--           MaxHeight="1600" -->
+            <!--           VirtualizingPanel.IsVirtualizingWhenGrouping="True" -->
+            <!--           VirtualizingPanel.ScrollUnit="Pixel" -->
+            <!--           RowHeight="25" -->
+            <!-- > -->
+            <!--     <DataGrid.Columns> -->
+            <!--         <DataGridTextColumn Width="25" Binding="{Binding Path=Id}" Header="Id" IsReadOnly="True" /> -->
+            <!--         <DataGridTextColumn Width="25" Binding="{Binding Path=Name}" Header="Имя" IsReadOnly="True" /> -->
+            <!--         <DataGridTextColumn Width="25" Binding="{Binding Path=Phone}" Header="Телефон" IsReadOnly="True" /> -->
+            <!--         <DataGridTextColumn -->
+            <!--             Width="25" -->
+            <!--             Binding="{Binding Path=CreateDate}" -->
+            <!--             Header="Первый визит" IsReadOnly="True" /> -->
+            <!--         <DataGridTextColumn -->
+            <!--             Width="25" -->
+            <!--             Binding="{Binding Path=LastVisitDate}" -->
+            <!--             Header="Последний визит" -->
+            <!--             IsReadOnly="True" /> -->
+            <!--         <DataGridTextColumn Width="25" Binding="{Binding Path=Visits}" Header="Кол-во визитов" -->
+            <!--                             IsReadOnly="True" /> -->
+            <!--         <DataGridCheckBoxColumn Width="25" Binding="{Binding Path=IsBiglion}" Header="Биглион" -->
+            <!--                                 IsReadOnly="True" /> -->
+            <!--         <DataGridTextColumn -->
+            <!--             Width="25" -->
+            <!--             Binding="{Binding Path=Discount}" -->
+            <!--             Header="Скидка" IsReadOnly="True" /> -->
+            <!--         <DataGridTextColumn -->
+            <!--             Binding="{Binding Path=DaysFromLastVisit}" IsReadOnly="True" -->
+            <!--             Width="130"> -->
+            <!--             <DataGridTextColumn.HeaderTemplate> -->
+            <!--                 <DataTemplate> -->
+            <!--                     <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Дней с последнего визита" /> -->
+            <!--                 </DataTemplate> -->
+            <!--             </DataGridTextColumn.HeaderTemplate> -->
+            <!--         </DataGridTextColumn> -->
+            <!--         <DataGridTemplateColumn Header="Заметки" Width="*" CellStyle="{StaticResource NotesStyle}"> -->
+            <!--             <DataGridTemplateColumn.CellTemplate> -->
+            <!--                 <DataTemplate> -->
+            <!--                     <TextBox AcceptsReturn="True" Text="{Binding Notes}" /> -->
+            <!--                 </DataTemplate> -->
+            <!--             </DataGridTemplateColumn.CellTemplate> -->
+            <!--         </DataGridTemplateColumn> -->
+            <!--         <DataGridTemplateColumn Width="25" Header=""> -->
+            <!--             <DataGridTemplateColumn.CellTemplate> -->
+            <!--                 <DataTemplate> -->
+            <!--                     <Button Content="Edit" Command="{Binding EditCommand}" /> -->
+            <!--                 </DataTemplate> -->
+            <!--             </DataGridTemplateColumn.CellTemplate> -->
+            <!--         </DataGridTemplateColumn> -->
+            <!--         <DataGridTemplateColumn Width="25" Header=""> -->
+            <!--             <DataGridTemplateColumn.CellTemplate> -->
+            <!--                 <DataTemplate> -->
+            <!--                     <Button Content="Visit" Command="{Binding AddVisitCommand}" /> -->
+            <!--                 </DataTemplate> -->
+            <!--             </DataGridTemplateColumn.CellTemplate> -->
+            <!--         </DataGridTemplateColumn> -->
+            <!--     </DataGrid.Columns> -->
+            <!-- </DataGrid> -->
         </Border>
 
         <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,0" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3">

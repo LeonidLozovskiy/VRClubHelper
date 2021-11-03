@@ -68,7 +68,7 @@ namespace CorgiVR.ViewModelEntities
 
             set => Set(ref id, value);
         }
-
+        
         public string Name
         {
             get => name;
