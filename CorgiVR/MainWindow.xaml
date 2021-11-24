@@ -256,16 +256,17 @@
                 <Border BorderBrush="Gainsboro" BorderThickness="0,1,0,2">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.2*" x:Name="NameColumn" />
-                            <ColumnDefinition Width="0.2*" x:Name="PhoneColumn" />
-                            <ColumnDefinition Width="0.15*" x:Name="CreateDateColumn" />
-                            <ColumnDefinition Width="0.15*" x:Name="LastVisitDateColumn" />
-                            <ColumnDefinition Width="0.12*" x:Name="IsBiglionColumn" />
-                            <ColumnDefinition Width="0.13*" x:Name="DaysFromLastVisitColumn" />
-                            <ColumnDefinition Width="0.1*" x:Name="DiscountColumn" />
-                            <ColumnDefinition Width="*" x:Name="NotesColumn" />
-                            <ColumnDefinition Width="50" x:Name="VisitButtonColumn" />
-                            <ColumnDefinition Width="50" x:Name="EditButtonColumn" />
+                            <ColumnDefinition Width="100" MinWidth="100" x:Name="NameColumn" />
+                            <ColumnDefinition Width="100" MinWidth="100" x:Name="PhoneColumn" />
+                            <ColumnDefinition Width="100" MinWidth="100" x:Name="CreateDateColumn" />
+                            <ColumnDefinition Width="100" MinWidth="100" x:Name="LastVisitDateColumn" />
+                            <ColumnDefinition Width="100" MinWidth="100" x:Name="IsBiglionColumn" />
+                            <ColumnDefinition Width="100" MinWidth="100" x:Name="DaysFromLastVisitColumn" />
+                            <ColumnDefinition Width="100" MinWidth="100" x:Name="VisitsColumn" />
+                            <ColumnDefinition Width="75" MinWidth="75" x:Name="DiscountColumn" />
+                            <ColumnDefinition Width="*" MinWidth="100" x:Name="NotesColumn" />
+                            <ColumnDefinition Width="50" MinWidth="50" x:Name="VisitButtonColumn" />
+                            <ColumnDefinition Width="50" MinWidth="50" x:Name="EditButtonColumn" />
                             <ColumnDefinition Width="10" />
                         </Grid.ColumnDefinitions>
                         <TextBlock TextWrapping="Wrap" Text="Имя" VerticalAlignment="Center"
@@ -280,17 +281,19 @@
                                    VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
                         <TextBlock TextWrapping="Wrap" Grid.Column="5" Text="Дней с последнего визита" Margin="5"
                                    VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
-                        <TextBlock TextWrapping="Wrap" Grid.Column="6" Text="Скидка" Margin="5"
+                        <TextBlock TextWrapping="Wrap" Grid.Column="6" Text="Колличество визитов" Margin="5"
                                    VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
-                        <TextBlock TextWrapping="Wrap" Grid.Column="7" Text="Заметки" Margin="5"
+                        <TextBlock TextWrapping="Wrap" Grid.Column="7" Text="Скидка" Margin="5"
                                    VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
-                        <TextBlock TextWrapping="Wrap" Grid.Column="8" Text="" Margin="5"
+                        <TextBlock TextWrapping="Wrap" Grid.Column="8" Text="Заметки" Margin="5"
                                    VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
                         <TextBlock TextWrapping="Wrap" Grid.Column="9" Text="" Margin="5"
                                    VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="10" Text="" Margin="5"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
                     </Grid>
                 </Border>
-                <ListBox Grid.Row="1" ItemsSource="{Binding Clients}" HorizontalContentAlignment="Stretch">
+                <ListBox Grid.Row="1" ItemsSource="{Binding Clients}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Focusable" Value="false" />
@@ -306,6 +309,7 @@
                                     <ColumnDefinition Width="{Binding ElementName=LastVisitDateColumn, Path=Width}" />
                                     <ColumnDefinition Width="{Binding ElementName=IsBiglionColumn, Path=Width}" />
                                     <ColumnDefinition Width="{Binding ElementName=DaysFromLastVisitColumn, Path=Width}" />
+                                    <ColumnDefinition Width="{Binding ElementName=VisitsColumn, Path=Width}" />
                                     <ColumnDefinition Width="{Binding ElementName=DiscountColumn, Path=Width}" />
                                     <ColumnDefinition Width="{Binding ElementName=NotesColumn, Path=Width}" />
                                     <ColumnDefinition Width="{Binding ElementName=VisitButtonColumn, Path=Width}" />
@@ -328,16 +332,18 @@
                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <TextBlock Grid.Column="5" Text="{Binding Path=DaysFromLastVisit}" Margin="5"
                                            VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBlock Grid.Column="6"
+                                <TextBlock Grid.Column="6" Text="{Binding Path=Visits}" Margin="5"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="7"
                                            Text="{Binding Path=Discount, Converter={StaticResource DiscountConverter}}"
                                            Margin="5"
                                            VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                <TextBox Grid.Column="7" AcceptsReturn="True" Text="{Binding Path=Notes}" Margin="5"
-                                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                                <Button Grid.Column="8" Content="Visit"
+                                <TextBox Grid.Column="8" AcceptsReturn="True" Text="{Binding Path=Notes}" Margin="5"
+                                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" />
+                                <Button Grid.Column="9" Content="Visit"
                                         Command="{Binding Path=AddVisitCommand}"
                                         VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" />
-                                <Button Grid.Column="9" Content="Edit"
+                                <Button Grid.Column="10" Content="Edit"
                                         Command="{Binding Path=EditCommand}"
                                         VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" />
                             </Grid>
