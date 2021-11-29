@@ -10,6 +10,7 @@
                  d:DataContext="{d:DesignInstance Type=viewModelEntities:MainWindowViewModel}"
                  mc:Ignorable="d"
                  WindowState="Maximized"
+                 Icon="logo.ico"
                  Title="CorgiVR" Height="450" Width="1200" MinWidth="900">
     <Window.Resources>
         <converters:DateTimeToDateConverter x:Key="DateConverter" />
